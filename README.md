@@ -11,6 +11,7 @@ Features:
 - Parsing UPDATEs, adding them to a local hashtable, and installing them to a local routing table based on very simplified and not RFC-compliant logic (the route with the highest localpref/as-path-length value is installed, for routes with the same value the route that was received first is installed)
 - 32-bit ASNs (should work with both 16-bit and 32-bit neighbors)
 - Prepending the local ASN
+- Validation of remote BGP messages (RFC incompliant, only the general message format, AS_PATH, MP_REACH_NLRI and MP_UNREACH_NLRI are validated)
 
 Not supported:
 - IPv4
