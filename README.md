@@ -1,7 +1,7 @@
 # ltbgp
 Not suitable for production! Minimal IPv6-only Linux BGP daemon.<br>
-LTbgp is a very small BGP client, it was coded in around a week (without AI) based on RFC 4271, RFC 6793, RFC 1997, RFC 8092, RFC 4760, RFC 5492 and RFC 2385, with the main purpose being to understand how BGP works, so some code is suboptimal (config parser, message construction), and it may be buggy, and IS NOT RECOMMENDED TO BE USED IN PRODUCTION (or generally).<br>
-It's single-threaded and uses nonblocking IO.<br>
+LTbgp is a very small BGP client, it was coded in around a week (without AI, except for the hash function for the hashtable) based on RFC 4271, RFC 6793, RFC 1997, RFC 8092, RFC 4760, RFC 5492 and RFC 2385, with the main purpose being to understand how BGP works, so some code is suboptimal (config parser, message construction), and it may be buggy, and IS NOT RECOMMENDED TO BE USED IN PRODUCTION (or generally).<br>
+It's single-threaded and uses nonblocking IO, and no libraries except for libc, so it should be rather efficient.<br>
 Features:
 - IPv6 (only)
 - Advertising local routes
@@ -9,7 +9,7 @@ Features:
 - Communities
 - Large communities
 - MD5 authentication
-- Parsing UPDATEs, adding them to a local hashtable, and installing them to a local routing table based on very simplified and not RFC-compliant logic (the route with the highest localpref/as-path-length value is installed, for routes with the same value the route that was received first is installed)
+- Parsing UPDATEs, adding them to a local hashtable, and installing them to a local routing table (selection is based on very simplified and not RFC-compliant logic (the route with the highest `localpref/as-path-length` value is installed, for routes with the same value the route that was received first is installed))
 - 32-bit ASNs (should work with both 16-bit and 32-bit neighbors)
 - Prepending the local ASN
 - Validation of remote BGP messages (RFC incompliant, only the general message format, AS_PATH, MP_REACH_NLRI and MP_UNREACH_NLRI are validated)
@@ -22,8 +22,7 @@ Not supported:
 - Having multiple local ASNs
 - Probably quite some other things as well
 
-LTbgp can be started by running the binary without any arguments; to get the status, one can use `ltbgp status`, and to reload the config `ltbgp reload`. Logs are by default stored at `/etc/ltbgp/log`.
-<br>
+LTbgp can be started by running the binary without any arguments; to get the status, one can use `ltbgp status`, and to reload the config `ltbgp reload`. Logs are by default stored at `/etc/ltbgp/log`.<br>
 The config format is rather simple, currently ltbgp expects the config to be at /etc/ltbgp/config, there are global config values, neighbor-specific config values, group-specific config values, and routes. Lines are ignored if they start with a '#'. For details, you may look at config.c.
 
 Example config:
