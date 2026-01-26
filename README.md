@@ -1,6 +1,7 @@
 # ltbgp
-Not suitable for production! Minimal IPv6-only Linux BGP daemon. <br>
+Not suitable for production! Minimal IPv6-only Linux BGP daemon.<br>
 LTbgp is a very small BGP client, it was coded in around a week (without AI) based on RFC 4271, RFC 6793, RFC 1997, RFC 8092, RFC 4760, RFC 5492 and RFC 2385, with the main purpose being to understand how BGP works, so some code is suboptimal (config parser, message construction), and it may be buggy, and IS NOT RECOMMENDED TO BE USED IN PRODUCTION (or generally).<br>
+It's single-threaded and uses nonblocking IO.<br>
 Features:
 - IPv6 (only)
 - Advertising local routes
