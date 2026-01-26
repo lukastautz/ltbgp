@@ -7,18 +7,6 @@ static const uint8 expected_marker[16] = {
     0xFF, 0xFF, 0xFF, 0xFF,
 };
 
-#include <stdio.h>
-#include <stddef.h> // for size_t
-
-// Function to print bytes in hexadecimal
-void print_hex(const char *data, size_t length) {
-    for (size_t i = 0; i < length; i++) {
-        printf("%02X ", (unsigned char)data[i]);
-    }
-    printf("\n");
-}
-
-
 void validate_bgp_message(void *bgp_message, uint16 max_length, struct bgp_message_validator_s *result) {
     if (max_length < sizeof(struct bgp_message_header_s)) {
         result->state = BGP_MESSAGE_INCOMPLETE;
