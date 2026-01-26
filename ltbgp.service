@@ -1,0 +1,13 @@
+[Unit]
+Description=LTbgp
+After=network.target
+
+[Service]
+Type=simple
+ExecStartPre=/bin/bash -c 'grep ^route /etc/ltbgp/config | sed "s@route[[:space:]]\+\([0-9a-z:/]*\).*@\1@" | while read -r net; do ip -6 addr add "$net" dev lo 2>/dev/null || true; done'
+#ExecStartPre=ip -6 rule add from 2a14:7580:f100::/48 table 150 priority 100
+ExecStart=/bin/ltbgp
+User=root
+
+[Install]
+WantedBy=multi-user.target
