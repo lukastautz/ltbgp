@@ -298,11 +298,10 @@ void handle_neighbor(uint16 id) {
                     memcpy(&md5sig.tcpm_addr, &remote, sizeof(remote));
                     HANDLE_ERROR(setsockopt(neighbor->tcp_fd, IPPROTO_TCP, TCP_MD5SIG, &md5sig, sizeof(md5sig)), "setsockopt md5")
                 }
-                if (neighbor->multihop) {
-                    int ttl = neighbor->multihop;
-                    HANDLE_ERROR(setsockopt(neighbor->tcp_fd, IPPROTO_IPV6, IPV6_UNICAST_HOPS, &ttl, sizeof(ttl)), "setsockopt IPV6_UNICAST_HOPS")
-                    HANDLE_ERROR(setsockopt(neighbor->tcp_fd, IPPROTO_IPV6, IPV6_RECVHOPLIMIT, &ttl, sizeof(ttl)), "setsockopt IPV6_RECVHOPLIMIT")
-                }
+                int ttl = neighbor->multihop;
+                HANDLE_ERROR(setsockopt(neighbor->tcp_fd, IPPROTO_IPV6, IPV6_UNICAST_HOPS, &ttl, sizeof(ttl)), "setsockopt IPV6_UNICAST_HOPS")
+                ttl = 256 - ttl;
+                HANDLE_ERROR(setsockopt(neighbor->tcp_fd, IPPROTO_IPV6, IPV6_MINHOPCOUNT, &ttl, sizeof(ttl)), "setsockopt IPV6_MINHOPCOUNT")
                 int res;
 connect:
                 res = connect(neighbor->tcp_fd, (struct sockaddr *)&remote, sizeof(remote));
