@@ -37,7 +37,7 @@ void free_settings(struct bgp_main_s *bgp) {
         free(bgp->announcing_groups[i].name);
     }
     free(bgp->announcing_groups);
-    for (uint16 i = 0; i < bgp->routes_count; ++i)
+    for (uint16 i = 0; i < bgp->route_count; ++i)
         free(bgp->routes[i].prefix);
     free(bgp->routes);
 }
@@ -426,7 +426,7 @@ void parse_settings(pid_t *read_pid, struct bgp_main_s *bgp) {
             if (prefix_length % 8 != 0)
                 route->prefix[((prefix_length + 7) / 8) - 1] &= (0xFF << (8 - (prefix_length % 8)));
             while (*endptr && isspace(*endptr)) ++endptr;
-            if (!endptr)
+            if (!*endptr)
                 error("Error parsing route");
             uint8 group_name_length = strlen(endptr);
             for (uint16 i = 0; i < group_count; ++i) {
