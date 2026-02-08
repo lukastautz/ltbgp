@@ -90,7 +90,7 @@ void remove_route_from_peer(struct value_s *v, uint8 peer_id) {
 void hashtable_remove_peer(uint8 peer_id) {
     uint32 s = 1000000;
     if (!bgp.has_non_default_route)
-        s = 0;
+        s = 1;
     for (uint32 i = 0; i < s; ++i) {
         struct value_s *v = hashtable[i], **prev_next = &hashtable[i];
         while (v) {
@@ -110,7 +110,7 @@ void hashtable_remove_peer(uint8 peer_id) {
 void hashtable_update_peer_id(uint8 peer_id_old, uint8 peer_id_new) {
     uint32 s = 1000000;
     if (!bgp.has_non_default_route)
-        s = 0;
+        s = 1;
     for (uint32 i = 0; i < s; ++i) {
         struct value_s *v = hashtable[i];
         while (v) {
