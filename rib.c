@@ -21,7 +21,7 @@ uint32 get_hash(union rib_subnet_u key) {
 void hashtable_init(void) {
     uint32 s = 1000000;
     if (!bgp.has_non_default_route)
-        s = 0;
+        s = 1;
     hashtable = (struct value_s **)alloc(s * sizeof(struct value_s *));
     memset(hashtable, 0, s * sizeof(struct value_s *));
 }
