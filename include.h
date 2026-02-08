@@ -34,7 +34,7 @@ typedef int8       bool;
 
 #define NEEDS_CONVERT /* needs to be converted to network byte order */
 
-#define PADDED __attribute__((__packed__))
+#define PACKED __attribute__((__packed__))
 
 #define AS_TRANS 23456
 
