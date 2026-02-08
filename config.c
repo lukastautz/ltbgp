@@ -441,7 +441,7 @@ void parse_settings(pid_t *read_pid, struct bgp_main_s *bgp) {
     }
     for (uint8 i = 0; i < neighbor_count; ++i) {
         uint16 routes_count = 0;
-        for (uint8 y = 0; y < route_count; ++y) {
+        for (uint16 y = 0; y < route_count; ++y) {
             if (bgp->announcing_groups[bgp->routes[y].bgp_announcing_group_id].announcement_specs[i].announce)
                 ++routes_count;
         }
