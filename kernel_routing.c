@@ -82,7 +82,7 @@ void kernel_remove_route(union rib_subnet_u subnet, uint8 *nexthop, int if_index
 }
 
 void kernel_update_route(union rib_subnet_u subnet, uint8 *nexthop, int if_index) {
-    kernel_route(subnet, nexthop, if_index, RTM_NEWROUTE, NLM_F_REQUEST | NLM_F_CREATE | NLM_F_EXCL | NLM_F_ACK);
+    kernel_route(subnet, nexthop, if_index, RTM_NEWROUTE, NLM_F_REQUEST | NLM_F_CREATE | NLM_F_REPLACE | NLM_F_ACK);
     uint8 recvbuf[32768];
     recv(bgp.netlink_fd, &recvbuf, sizeof(recvbuf), 0);
 }
