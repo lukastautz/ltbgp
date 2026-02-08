@@ -250,6 +250,7 @@ void parse_settings(pid_t *read_pid, struct bgp_main_s *bgp) {
             is_parsing_neighbor = true;
             current_neighbor->name = safe_strdup(value);
             current_neighbor->id = neighbor_id;
+            current_neighbor->multihop = 1;
         }
         line_start = line_end + 1;
     }
