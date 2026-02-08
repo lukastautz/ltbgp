@@ -6,13 +6,13 @@
 
 extern struct bgp_main_s bgp;
 
-struct PADDED rib_subnet_s {
+struct PACKED rib_subnet_s {
     uint8 subnet_length;
     uint8 ipv6[6]; // max /48
     uint8 padding;
 };
 
-union PADDED rib_subnet_u {
+union PACKED rib_subnet_u {
     struct rib_subnet_s subnet;
     uint64 value;
 };
