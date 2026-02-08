@@ -3,7 +3,7 @@
 extern struct bgp_main_s bgp;
 
 void kernel_clear_table(void) {
-    struct PADDED {
+    struct PACKED {
         struct nlmsghdr hdr;
         struct rtmsg msg;
     } req;
@@ -46,7 +46,7 @@ static void netlink_attribute(struct nlmsghdr *hdr, int type, void *data, uint16
 }
 
 static void kernel_route(union rib_subnet_u subnet, uint8 *nexthop, int if_index, int nlmsg_type, int nlmsg_flags) {
-    struct PADDED {
+    struct PACKED {
         struct nlmsghdr hdr;
         struct rtmsg msg;
         uint8 attributes[4096];
