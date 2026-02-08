@@ -1,6 +1,6 @@
 #include "bgp.h"
 
-time_t now;
+time_t now = 0;
 
 struct bgp_main_s bgp;
 
@@ -8,6 +8,7 @@ struct bgp_main_s bgp;
 #pragma GCC diagnostic ignored "-Wbuiltin-declaration-mismatch"
 
 void log(char *str0, char *str1, char *str2, char *str3) {
+    if (!now) now = time(NULL);
     uint16 lens[4] = {
         str0 ? strlen(str0) : 0,
         str1 ? strlen(str1) : 0,
