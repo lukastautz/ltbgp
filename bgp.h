@@ -101,9 +101,9 @@ struct bgp_announcing_group_s {
 struct bgp_announcement_specs_s {
     bool announce;
     uint8 communities_count;
-    uint32 *communities; // 32 bit per community, so sizeof(communities) = 2 * communities_count, already converted to network byte order
+    uint32 *communities; // 32 bit per community, so sizeof(communities) = 2 * communities_count
     uint8 large_communities_count;
-    uint32 *large_communities; // 96 bit per community, so sizeof(large_communities) = 3 * large_communities_count, already converted to network byte order
+    uint32 *large_communities; // 96 bit per community, so sizeof(large_communities) = 3 * large_communities_count
     uint8 prepend_n_times;
 };
 
