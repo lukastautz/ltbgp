@@ -300,8 +300,6 @@ void handle_neighbor(uint16 id) {
                 }
                 int ttl = neighbor->multihop;
                 HANDLE_ERROR(setsockopt(neighbor->tcp_fd, IPPROTO_IPV6, IPV6_UNICAST_HOPS, &ttl, sizeof(ttl)), "setsockopt IPV6_UNICAST_HOPS")
-                ttl = 256 - ttl;
-                HANDLE_ERROR(setsockopt(neighbor->tcp_fd, IPPROTO_IPV6, IPV6_MINHOPCOUNT, &ttl, sizeof(ttl)), "setsockopt IPV6_MINHOPCOUNT")
                 int res;
 connect:
                 res = connect(neighbor->tcp_fd, (struct sockaddr *)&remote, sizeof(remote));
