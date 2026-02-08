@@ -79,6 +79,7 @@ void remove_route_from_peer(struct value_s *v, uint8 peer_id) {
         if (v->best_route_peer_id == peer_id) {
             kernel_update_route(v->subnet, highest_pref_route->nexthop, bgp.neighbors[highest_pref_route->peer_id].if_index);
             ++bgp.neighbors[highest_pref_peer].installed_routes_count;
+            --bgp.neighbors[peer_id].installed_routes_count;
             v->best_route_peer_id = highest_pref_peer;
         }
         free(v->routes);
@@ -163,6 +164,11 @@ void hashtable_add_route(union rib_subnet_u s, uint8 peer_id, float pref, uint8 
             } else {
                 kernel_update_route(s, nexthop, bgp.neighbors[peer_id].if_index);
             }
+        } else if (pref > highest_pref) {
+            ++bgp.neighbors[peer_id].installed_routes_count;
+            --bgp.neighbors[v->best_route_peer_id].installed_routes_count;
+            v->best_route_peer_id = peer_id;
+            kernel_update_route(s, nexthop, bgp.neighbors[peer_id].if_index);
         }
         existing_route->pref = pref;
         memcpy(existing_route->nexthop, nexthop, 16);
