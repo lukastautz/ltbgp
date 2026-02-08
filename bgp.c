@@ -637,7 +637,7 @@ bool send_int(int fd, uint32 i) {
     if (len + status_send_len > sizeof(status_send_buf)) {
         uint16 written = 0;
         int tmp;
-        while (written < status_send_len && (tmp = write(fd, status_send_buf + written, status_send_len)) > 0)
+        while (written < status_send_len && (tmp = write(fd, status_send_buf + written, status_send_len - written)) > 0)
             written += tmp;
         if (written != status_send_len) {
             return false;
@@ -653,7 +653,7 @@ bool send_str(int fd, char *str, uint8 len) {
     if (len + status_send_len > sizeof(status_send_buf)) {
         uint16 written = 0;
         int tmp;
-        while (written < status_send_len && (tmp = write(fd, status_send_buf + written, status_send_len)) > 0)
+        while (written < status_send_len && (tmp = write(fd, status_send_buf + written, status_send_len - written)) > 0)
             written += tmp;
         if (written != status_send_len) {
             return false;
@@ -841,7 +841,7 @@ close:
     STR("\n")
     uint16 written = 0;
     int tmp;
-    while (written < status_send_len && (tmp = write(fd, status_send_buf, status_send_len)) > 0)
+    while (written < status_send_len && (tmp = write(fd, status_send_buf + written, status_send_len - written)) > 0)
         written += tmp;
     close(fd);
 }
