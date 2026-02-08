@@ -49,6 +49,7 @@ void log(char *str0, char *str1, char *str2, char *str3) {
 #pragma GCC diagnostic pop
 
 void *alloc(uint32 bytes) {
+    if (bytes == 0) return NULL;
     void *result = malloc(bytes);
     if (result == NULL) {
         write(2, "Error: malloc() failed!", strlen("Error: malloc() failed!"));
@@ -58,6 +59,7 @@ void *alloc(uint32 bytes) {
 }
 
 void *safe_realloc(void *ptr, uint32 bytes) {
+    if (ptr == NULL) return alloc(bytes);
     void *result = realloc(ptr, bytes);
     if (result == NULL) {
         write(2, "Error: realloc() failed!", strlen("Error: realloc() failed!"));
