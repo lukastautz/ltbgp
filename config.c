@@ -19,17 +19,26 @@ char *strspace(char *str) {
 #define CASE(str) else if (!memcmp(line_start, str, sizeof(str)))
 
 void free_settings(struct bgp_main_s *bgp) {
-    for (uint8 i = 0; i < bgp->neighbor_count; ++i)
+    for (uint8 i = 0; i < bgp->neighbor_count; ++i) {
         if (bgp->neighbors[i].md5_password) free(bgp->neighbors[i].md5_password);
+        free(bgp->neighbors[i].if_name);
+        free(bgp->neighbors[i].name);
+        if (bgp->neighbors[i].locally_withdrawn_routes_length > 0) free(bgp->neighbors[i].locally_withdrawn_routes_raw);
+    }
     free(bgp->neighbors);
     for (uint16 i = 0; i < bgp->announcing_group_count; ++i) {
-        if (bgp->announcing_groups[i].announcement_specs->communities)
-            free(bgp->announcing_groups[i].announcement_specs->communities);
-        if (bgp->announcing_groups[i].announcement_specs->large_communities)
-            free(bgp->announcing_groups[i].announcement_specs->large_communities);
+        for (uint8 y = 0; y < bgp->neighbor_count; ++y) {
+            if (bgp->announcing_groups[i].announcement_specs[y].communities)
+                free(bgp->announcing_groups[i].announcement_specs[y].communities);
+            if (bgp->announcing_groups[i].announcement_specs[y].large_communities)
+                free(bgp->announcing_groups[i].announcement_specs[y].large_communities);
+        }
         free(bgp->announcing_groups[i].announcement_specs);
+        free(bgp->announcing_groups[i].name);
     }
     free(bgp->announcing_groups);
+    for (uint16 i = 0; i < bgp->routes_count; ++i)
+        free(bgp->routes[i].prefix);
     free(bgp->routes);
 }
 
@@ -251,7 +260,7 @@ void parse_settings(pid_t *read_pid, struct bgp_main_s *bgp) {
         bgp->announcing_groups[i].announcement_specs = alloc(sizeof(struct bgp_announcement_specs_s) * neighbor_count);
         memset(bgp->announcing_groups[i].announcement_specs, 0, sizeof(struct bgp_announcement_specs_s) * neighbor_count);
     }
-    bgp->announcing_groups[0].name = "default";
+    bgp->announcing_groups[0].name = safe_strdup("default");
     for (uint8 i = 0; i < neighbor_count; ++i)
         bgp->announcing_groups[0].announcement_specs[i].announce = true;
     line_start = config_third_pass;
