@@ -175,7 +175,7 @@ void hashtable_add_route(union rib_subnet_u s, uint8 peer_id, float pref, uint8 
             kernel_update_route(s, nexthop, bgp.neighbors[peer_id].if_index);
         }
         ++v->route_count;
-        v->routes = v->route_count > 1 ? (struct rib_route_s *)realloc(v->routes, sizeof(struct rib_route_s) * v->route_count) : (struct rib_route_s *)malloc(sizeof(struct rib_route_s));
+        v->routes = v->route_count > 1 ? (struct rib_route_s *)safe_realloc(v->routes, sizeof(struct rib_route_s) * v->route_count) : (struct rib_route_s *)alloc(sizeof(struct rib_route_s));
         v->routes[v->route_count - 1].peer_id = peer_id;
         v->routes[v->route_count - 1].pref = pref;
         memcpy(v->routes[v->route_count - 1].nexthop, nexthop, 16);
