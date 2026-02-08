@@ -83,14 +83,14 @@ void parse_settings(pid_t *read_pid, struct bgp_main_s *bgp) {
         SWITCH
         CASE("log") {
             if (!read_pid) {
-                bgp->log_fd = open(value, O_WRONLY | O_APPEND | O_CREAT);
+                bgp->log_fd = open(value, O_WRONLY | O_APPEND | O_CREAT, 0600);
                 if (bgp->log_fd == -1)
                     error("Opening log file failed");
             }
         }
         CASE("pid") {
             if (!read_pid) {
-                int pid_fd = open(value, O_WRONLY | O_CREAT | O_TRUNC);
+                int pid_fd = open(value, O_WRONLY | O_CREAT | O_TRUNC, 0600);
                 if (pid_fd == -1)
                     error("Opening pid file failed");
                 pid_t pid = getpid();
