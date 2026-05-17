@@ -202,6 +202,11 @@ void construct_update_message(struct bgp_neighbor_s *neighbor, struct bgp_main_s
         path_attribute_header->flags = 0b11000000;
         path_attribute_header->typecode = BGP_UPDATE_TYPECODE_COMMUNITIES;
         path_attribute_header->length = 4 * announcement_specs->communities_count;
+        if (4 * announcement_specs->communities_count > 255) {
+            path_attribute_header->flags |= 0b00010000; // extended length;
+            *(uint16 *)&path_attribute_header->length = __bswap_16(4 * announcement_specs->communities_count);
+           ++total_length;
+        }
         total_length += sizeof(struct bgp_update_path_attribute_s);
         for (uint8 i = 0; i < announcement_specs->communities_count; ++i) {
             uint16 *community = (uint16 *)&announcement_specs->communities[i];
@@ -217,6 +222,11 @@ void construct_update_message(struct bgp_neighbor_s *neighbor, struct bgp_main_s
         path_attribute_header->flags = 0b11000000;
         path_attribute_header->typecode = BGP_UPDATE_TYPECODE_LARGE_COMMUNITIES;
         path_attribute_header->length = 12 * announcement_specs->large_communities_count;
+        if (12 * announcement_specs->large_communities_count > 255) {
+            path_attribute_header->flags |= 0b00010000; // extended length;
+            *(uint16 *)&path_attribute_header->length = __bswap_16(12 * announcement_specs->large_communities_count);
+           ++total_length;
+        }
         total_length += sizeof(struct bgp_update_path_attribute_s);
         for (uint8 i = 0; i < announcement_specs->large_communities_count; ++i) {
             uint32 *parts = &announcement_specs->large_communities[i * 3];
@@ -264,9 +274,9 @@ void handle_neighbor(uint16 id) {
         case BGP_NEIGHBOR_FAILED:
             return;
         case BGP_NEIGHBOR_DISCONNECTED:
-            if (neighbor->failure_count >= 50) {
+            if (neighbor->failure_count >= 100) {
                 neighbor->state = BGP_NEIGHBOR_FAILED;
-                log(neighbor->name, "Connection to neighbor marked as failed due to 50 failed connection attempts", NULL, NULL);
+                log(neighbor->name, "Connection to neighbor marked as failed due to 100 failed connection attempts", NULL, NULL);
                 return;
             }
             uint8 retry_after_n_seconds = neighbor->failure_count * 5;
