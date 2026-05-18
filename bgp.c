@@ -279,7 +279,7 @@ void handle_neighbor(uint16 id) {
                 log(neighbor->name, "Connection to neighbor marked as failed due to 100 failed connection attempts", NULL, NULL);
                 return;
             }
-            uint8 retry_after_n_seconds = neighbor->failure_count * 5;
+            uint16 retry_after_n_seconds = neighbor->failure_count * 5;
             if (neighbor->disconnected_at + retry_after_n_seconds < now) {
                 neighbor->local_routes_sent = 0;
                 neighbor->routes_count = 0;
@@ -425,6 +425,7 @@ connect:
             if (received == -1) {
                 if (errno != EAGAIN && errno != EINTR && errno != EWOULDBLOCK) {
                     disconnect(neighbor, "Reading from TCP connection failed", strerror(errno), NULL);
+                    return;
                 }
                 if (neighbor->received_open && neighbor->last_keepalive_received + neighbor->used_hold_time + 5 <= now) {
                     disconnect(neighbor, "Hold timer expired", NULL, NULL);
@@ -858,10 +859,10 @@ close:
 void reload_config(void) {
     log("MAIN", "Reloading configuration", NULL, NULL);
     close(bgp.log_fd);
-    int netlink_fd = bgp.netlink_fd;
     struct bgp_main_s new_config;
     parse_settings(NULL, &new_config);
-    new_config.netlink_fd = netlink_fd;
+    new_config.has_non_default_route = bgp.has_non_default_route;
+    new_config.netlink_fd = bgp.netlink_fd;
     if (new_config.local_asn_32bit != bgp.local_asn_32bit || new_config.routing_table_id != bgp.routing_table_id) {
         for (uint8 i = 0; i < bgp.neighbor_count; ++i) {
             if (bgp.neighbors[i].state != BGP_NEIGHBOR_DISCONNECTED && bgp.neighbors[i].state != BGP_NEIGHBOR_FAILED)
